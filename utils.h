@@ -4,7 +4,7 @@
 /**
  * Type Coords contenant l'abscisse(x) et l'ordonée(y) d'un point.
 */
-typedef struct {
+typedef struct Coords{
     int x;
     int y;
 } Coords;
@@ -12,11 +12,19 @@ typedef struct {
 /**
  * Type Ville ayant un nom et des coordonées.
 */
-typedef struct {
+typedef struct City{
     char* name;
     Coords position;
 } City;
 
+
+/**
+ * Type Chemin, avec l'ordre de passage et la distance totale du parcours
+*/
+typedef struct Path{
+    float totalDistance;
+    City* pathCitiesOrder;
+} Path;
 
 /**
  * Retourne la distance entre deux coordonées.
@@ -26,6 +34,6 @@ float distanceCoord(Coords, Coords);
 /**
  * Retourne la distance entre deux villes.
 */
-float distanceCity(City, City);
+float distanceCity(City*, City*);
 
 #endif
