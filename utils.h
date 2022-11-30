@@ -28,7 +28,7 @@ typedef struct Path{
 /**
  * Retourne la distance entre deux coordonées.
 */
-float distanceCoord(Coords, Coords);
+float distanceCoord(Coords*, Coords*);
 
 /**
  * Retourne la distance entre deux villes.

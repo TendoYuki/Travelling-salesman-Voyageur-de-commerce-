@@ -109,7 +109,7 @@ void generateDistanceMatrix(Board* bd){
     for(int i=0;i<bd->citiesCount;i++){
         for(int j=i;j<bd->citiesCount;j++){
             if(i==j){
-                bd->distanceMatrix[i][j] = distanceCoord(bd->cities[i]->position, origin);
+                bd->distanceMatrix[i][j] = distanceCoord(&bd->cities[i]->position, &origin);
                 continue;
             }
             bd->distanceMatrix[i][j] = distanceCity(bd->cities[i], bd->cities[j]);
