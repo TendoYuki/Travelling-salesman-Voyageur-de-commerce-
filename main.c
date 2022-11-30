@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-void printMatrix(float tab[8][8], int size) {
+void printMatrix(float** tab, int size) {
     for(int i = 0; i < size; i++) {
         printf("[ ");
         for(int j = 0; j < size; j++) {
@@ -15,18 +15,7 @@ void printMatrix(float tab[8][8], int size) {
     
 }
 
-
-int factorial( int n) {
-    if (n == 0)
-        return 1;
-    return n * factorial(n - 1);
-}
-
-int calculatePossibilitiesCount(int citiesCount) {
-    return factorial(citiesCount - 1);
-}
-
-void printPathMatrix(Path *tab, int size) {
+void printPathMatrix(Path* tab, int size) {
     for(int i = 0; i < calculatePossibilitiesCount(size); i++) {
         printf("[ ");
         for(int j = 0; j < size; j++) {
@@ -37,7 +26,7 @@ void printPathMatrix(Path *tab, int size) {
     
 }
 
-void printCitiesMatrix(City *tab, int size) {
+void printCitiesMatrix(City* tab, int size) {
     for(int i = 0; i < size; i++) {
         printf("[ ");
         printf("%s, ", tab[i].name);
@@ -46,7 +35,7 @@ void printCitiesMatrix(City *tab, int size) {
     
 }
 
-void removeElement(City cities[], int index, int size) {
+void removeElement(City* cities, int index, int size) {
     City newCities[size - 1];
     int offset = 0;
     for(int i; i<size - 1; i++) {
@@ -94,42 +83,30 @@ void removeElement(City cities[], int index, int size) {
 //     }
 // }
 
-Path* calculatePossibilities(City cities[], int citiesCount, Path* pathList, int pathIndex) {
-    if(citiesCount == 0 ) {
-        return pathList;
-    }
-    for(int i = 1; i <= citiesCount; i++) {  
-        //i -> current city index
-        //Enleve la ville courrante des villes restantes
-        City citiesLeft[citiesCount - 1];
-        int offset = 0;
-        for(int j = 0; j<citiesCount; j++) {
-            if(j==i-1) offset++;
-            citiesLeft[j] = cities[j + offset];
-        }
-
-        pathList[pathIndex].pathCitiesOrder[i-1] = cities[i-1];
-        printCitiesMatrix(cities, citiesCount);
-        return calculatePossibilities(citiesLeft, citiesCount-1, pathList, pathIndex + citiesCount * i);
-    }
-}
+// Path* calculatePossibilities(City* cities) {
+    
+// }
 
 
 int main() {
-    
-    char * citiesNames[] = {"Lille", "Paris", "Montcuq", "Grenbole", "Amiens", "Saint-Dié", "Dijon", "Toulouse"};
-    Board* bd = createBoard(50,20,8,citiesNames);
+    // Production Board
+    // Board* bd = createBoard(50,20,8, (char*[]){"Lille", "Paris", "Montcuq", "Grenbole", "Amiens", "Saint-Dié", "Dijon", "Toulouse"});
+
+    // Debug board for smaller possibiliies
+    Board* bd = createBoard(50,20,4, (char*[]){"Lille", "Paris", "Montcuq", "Grenbole"});
+
     populateBoard(bd);
-    //Printing all cities
-    for(int i = 0; i < 8; i++) {
+
+    //Printing all cities x and y coords DEBUG ONLY
+    for(int i = 0; i < bd->citiesCount; i++) {
         printf("%s\n | x: %d\n | y: %d\n", bd->cities[i]->name, bd->cities[i]->position.x, bd->cities[i]->position.y);
     }
+
     displayBoard(bd);
+
     generateDistanceMatrix(bd);
 
 
-    free(bd->cities);
-    free(bd->distanceMatrix);
-    free(bd);
+    freeBoard(bd);
     return 0;
 }

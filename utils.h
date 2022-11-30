@@ -17,7 +17,6 @@ typedef struct City{
     Coords position;
 } City;
 
-
 /**
  * Type Chemin, avec l'ordre de passage et la distance totale du parcours
 */
@@ -36,4 +35,13 @@ float distanceCoord(Coords, Coords);
 */
 float distanceCity(City*, City*);
 
+/**
+ * Calcule la factorelle d'un nombre
+*/
+int factorial(int);
+
+/**
+ * Calcule le nombre de possibilitées de chemin en fonction du nombre de villes
+*/
+int calculatePossibilitiesCount(int);
 #endif

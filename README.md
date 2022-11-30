@@ -4,5 +4,12 @@ By [@nocymer](https://github.com/NoCymer) And [@tendo_yuki](https://github.com/T
 ## Compiling 
 
 ```bash
-gcc main.c board.c utils.c -lm
+make
+```
+
+## Executing
+
+### GNU / Linux
+```bash
+./main
 ```

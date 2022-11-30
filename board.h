@@ -3,7 +3,8 @@
 #include "utils.h"
 
 /**
- * Type plateau contenant sa largeur, sa hauteur anisi que les huit villes qu'il contient.
+ * Type plateau contenant sa largeur, sa hauteur la liste de pointeur vers les villes qu'il contient, 
+ * le nombre de villes qu'il contient et la matrice des distances intervilles.
 */
 typedef struct Board{
     int width;
@@ -12,8 +13,9 @@ typedef struct Board{
     City** cities;
     float** distanceMatrix;
 } Board;
+
 /*
- * Céer un plateau 
+ * Crée un plateau 
 */
 Board* createBoard(int,int,int,char**);
 
@@ -28,13 +30,18 @@ void displayBoard(Board*);
 void populateBoard(Board*);
 
 /**
- * Retourne la ville en fonction d'un plateau donné et du nom de la ville.
+ * Retourne un pointeru vers une ville en fonction d'un plateau donné et du nom recherché.
 */
 City* getCity(Board*, char*);
 
 /**
- * Créer une matrice avec toutes les distances intervilles
+ * Calcule la matrice avec toutes les distances intervilles d'un plateau donné
 */
 void generateDistanceMatrix(Board*);
+
+/**
+ * Désalloue un plateau et tout ses composants
+*/
+void freeBoard(Board*);
 
 #endif
