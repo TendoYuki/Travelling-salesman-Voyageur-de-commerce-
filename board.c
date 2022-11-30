@@ -47,22 +47,22 @@ void freeBoard(Board* bd) {
 }
 
 void populateBoard(Board* bd) {
-    /* On itére citiesCount fois pour mettre une valeur
-    on verifie que la valeur aléatoire ne soit pas déja dans la table
-    si elle y est on en génére une nouvelle
-    sinon on l'ajoute*/
-
+    // On itére citiesCount fois pour générer des coordonées aléatoire pour chaque ville
     srand(time(NULL));
     for(int i = 0; i < bd->citiesCount; i++){
         bool isInArray = true;
         Coords rd;
         while(isInArray) {
-            rd.x = rand() % 50;
-            rd.y = rand() % 20;
+            //On génére des valeurs aléatoires x et y compises respectivment entre 0 et la largeur, 0 et la hauteur
+            rd.x = rand() % bd->width;
+            rd.y = rand() % bd->height;
+            //On verifie que la valeur aléatoire ne soit pas déja dans la table
             for(int j = 0; j < bd->citiesCount; j++){
+                //Si elle n'est pas déja dans la table on sort de la boucle
                 if(!(bd->cities[j]->position.x == rd.x && bd->cities[j]->position.y == rd.y)) isInArray = false;
             }
         }
+        //On assigne la coordonée aléatoirement généré à la ville séléctionnée
         bd->cities[i]->position = rd; 
     }
     //Algorithme de tri des villes
