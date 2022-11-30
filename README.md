@@ -1,5 +1,5 @@
 # Traveling Salesman Problem
-By [@nocymer](https://github.com/NoCymer) And [@tendo_yuki](https://github.com/TendoYuki)
+By [@nocymer](https://github.com/NoCymer) & [@tendo_yuki](https://github.com/TendoYuki)
 
 ## Compiling 
 
