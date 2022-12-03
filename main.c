@@ -92,7 +92,7 @@ int main() {
     // Production Board
     // Board* bd = createBoard(50,20,8, (char*[]){"Lille", "Paris", "Montcuq", "Grenbole", "Amiens", "Saint-Dié", "Dijon", "Toulouse"});
 
-    Board* bd = createBoard(50,20,4, (char*[]){"Lille", "Paris", "Montcuq", "Grenbole"});
+    Board* bd = createBoard(50,20,4, (char*[]){"Lille", "Paris", "Montcuq", "Grenbole"}); // Debug line
 
     populateBoard(bd);
 
@@ -101,10 +101,10 @@ int main() {
     generateDistanceMatrix(bd);
 
     // Printing all cities x and y coords DEBUG ONLY
-    // for(int i = 0; i < bd->citiesCount; i++) {
-    //     printf("%s\n | x: %d\n | y: %d\n", bd->cities[i]->name, bd->cities[i]->position.x, bd->cities[i]->position.y);
-    // }
+    for(int i = 0; i < bd->citiesCount; i++) {
+        printf("%s\n | x: %d\n | y: %d\n", bd->cities[i]->name, bd->cities[i]->position.x, bd->cities[i]->position.y);
+    }
 
-    freeBoard(bd);
+    destroyBoard(bd);
     return 0;
 }

@@ -42,6 +42,6 @@ void generateDistanceMatrix(Board*);
 /**
  * Désalloue un plateau et tout ses composants
 */
-void freeBoard(Board*);
+void destroyBoard(Board*);
 
 #endif

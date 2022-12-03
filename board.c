@@ -33,7 +33,7 @@ Board* createBoard(int width, int height, int citiesCount, char** citiesNames) {
     return bd;
 }
 
-void freeBoard(Board* bd) {
+void destroyBoard(Board* bd) {
     //Libère les villes
     for (int i=0; i<bd->citiesCount; i++) free(bd->cities[i]);
     free(bd->cities);
