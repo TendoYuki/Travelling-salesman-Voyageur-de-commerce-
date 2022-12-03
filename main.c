@@ -83,9 +83,9 @@ void removeElement(City* cities, int index, int size) {
 //     }
 // }
 
-Path* calculatePossibilities(City* cities) {
+// Path* calculatePossibilities(City* cities) {
     
-}
+// }
 
 
 int main() {
