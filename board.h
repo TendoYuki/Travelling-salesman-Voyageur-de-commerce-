@@ -10,7 +10,7 @@ typedef struct Board{
     int width;
     int height;
     int citiesCount;
-    int possiblePathCount;
+    int possiblePathsCount;
     City** cities;
     float** distanceMatrix;
     Path** possiblePaths;
