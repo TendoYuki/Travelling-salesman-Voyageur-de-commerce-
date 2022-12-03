@@ -83,9 +83,9 @@ void removeElement(City* cities, int index, int size) {
 //     }
 // }
 
-// Path* calculatePossibilities(City* cities) {
+Path* calculatePossibilities(City* cities) {
     
-// }
+}
 
 
 int main() {
@@ -99,7 +99,6 @@ int main() {
     displayBoard(bd);
 
     generateDistanceMatrix(bd);
-
     // Printing all cities x and y coords DEBUG ONLY
     for(int i = 0; i < bd->citiesCount; i++) {
         printf("%s\n | x: %d\n | y: %d\n", bd->cities[i]->name, bd->cities[i]->position.x, bd->cities[i]->position.y);

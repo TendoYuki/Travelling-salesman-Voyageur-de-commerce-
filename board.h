@@ -10,8 +10,10 @@ typedef struct Board{
     int width;
     int height;
     int citiesCount;
+    int possiblePathCount;
     City** cities;
     float** distanceMatrix;
+    Path** possiblePaths;
 } Board;
 
 /*
@@ -42,6 +44,6 @@ void generateDistanceMatrix(Board*);
 /**
  * Désalloue un plateau et tout ses composants
 */
-void destroyBoard(Board*);
+void freeBoard(Board*);
 
 #endif

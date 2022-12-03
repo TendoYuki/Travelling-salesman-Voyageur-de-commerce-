@@ -18,6 +18,16 @@ Board* createBoard(int width, int height, int citiesCount, char** citiesNames) {
     bd->cities = malloc(sizeof(City) * citiesCount);
     if(bd->cities == NULL) exit(1);
 
+    bd->possiblePathCount = factorial(citiesCount-1)/2;
+
+    bd->possiblePaths = malloc(sizeof(Path) * bd->possiblePathCount);
+    if(bd->possiblePaths == NULL) exit(1);
+
+    for (int i = 0; i < bd->possiblePathCount; i++) {
+        bd->possiblePaths[i] = malloc(sizeof(Path));
+        if(bd->possiblePaths[i] == NULL) exit(1);
+    }
+
     bd->distanceMatrix = malloc(sizeof(int*) * citiesCount);
     if(bd->distanceMatrix == NULL) exit(1);
 
@@ -37,6 +47,10 @@ void destroyBoard(Board* bd) {
     //Libère les villes
     for (int i=0; i<bd->citiesCount; i++) free(bd->cities[i]);
     free(bd->cities);
+
+    //Libère les chemin possibles
+    for (int i=0; i<bd->possiblePathCount; i++) free(bd->possiblePaths[i]);
+    free(bd->possiblePaths);
 
     //Libère le tableau bidimensionel des distances
     for (int i=0; i<bd->citiesCount; i++) free(bd->distanceMatrix[i]);
