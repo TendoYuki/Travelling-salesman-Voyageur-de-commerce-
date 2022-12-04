@@ -4,10 +4,10 @@
 #include <stdlib.h>
 #include <math.h>
 
-void printMatrix(float** tab, int size) {
-    for(int i = 0; i < size; i++) {
-        printf("[ ");
-        for(int j = 0; j < size; j++) {
+void printMatrix(float** tab, int sizeX, int sizeY) {
+    for(int i = 0; i < sizeY; i++) {
+        printf("\n[ ");
+        for(int j = 0; j < sizeX; j++) {
             printf("%f, ", tab[i][j]);
         }
         printf(" ]\n");
@@ -15,11 +15,11 @@ void printMatrix(float** tab, int size) {
     
 }
 
-void printPathMatrix(Path* tab, int size) {
-    for(int i = 0; i < calculatePossibilitiesCount(size); i++) {
+void printPathMatrix(Board* bd) {
+    for(int i = 0; i < bd->possiblePathsCount; i++) {
         printf("[ ");
-        for(int j = 0; j < size; j++) {
-            printf("%s, ", tab[i].pathCitiesOrder[j].name);
+        for(int j = 0; j < bd->citiesCount; j++) {
+            printf("%s, ", bd->possiblePaths[i]->pathCitiesOrder[j]->name);
         }
         printf(" ]\n");
     }
@@ -35,75 +35,82 @@ void printCitiesMatrix(City* tab, int size) {
     
 }
 
-void removeElement(City* cities, int index, int size) {
-    City newCities[size - 1];
-    int offset = 0;
-    for(int i; i<size - 1; i++) {
-        if(i==index) offset++;
-        newCities[i] = cities[i + offset];
+
+void generatePath(Board* bd, City* currentCity, Path* previousPath, City** citiesLeft, int citiesLeftCount, int previousDivergence, int maxDepth, int depth) {
+    previousPath->pathCitiesOrder[depth-1] = currentCity;
+    if(citiesLeftCount == 0) {
+        bd->possiblePaths[previousDivergence] = clonePath(previousPath, bd->citiesCount);
+        free(citiesLeft);
+        freePath(previousPath, bd->citiesCount);
+        return;
     }
 
-    for(int i; i<size; i++) {
-        cities[i] = newCities[i];
+    for (int i = 0; i < citiesLeftCount; i++) {
+        int divergence = factorial(maxDepth - (depth + 1)) * i + previousDivergence;
+        City** newCitiesLeft = copyCityList(citiesLeft, citiesLeftCount);
+        generatePath(bd, getCity(bd, citiesLeft[i]->name), clonePath(previousPath, bd->citiesCount), removeCity(newCitiesLeft, i, citiesLeftCount), citiesLeftCount-1, divergence ,maxDepth , depth+1);
+        free(newCitiesLeft);
+    }
+    free(citiesLeft);
+    freePath(previousPath, bd->citiesCount);
+}
+
+void generatePossiblePaths(Board* bd) {
+    Path* path = createPath(bd->citiesCount);
+    City** newCitiesLeft = copyCityList(bd->cities, bd->citiesCount);
+    generatePath(bd, bd->cities[0], path, removeCity(newCitiesLeft, 0, bd->citiesCount), bd->citiesCount-1, 0, bd->citiesCount, 1);
+    free(newCitiesLeft);
+}
+
+void calculatePathDistance(Board* bd, Path* path) {
+    float dist = 0;
+    for(int i=0; i<bd->citiesCount; i++) {
+        if (i == bd->citiesCount-1) {
+            dist += bd->distanceMatrix[getCityIndex(bd, path->pathCitiesOrder[i])][getCityIndex(bd, path->pathCitiesOrder[0])];
+        } 
+        else {
+            dist += bd->distanceMatrix[getCityIndex(bd, path->pathCitiesOrder[i])][getCityIndex(bd, path->pathCitiesOrder[i+1])];
+        }
+    }
+    path->totalDistance = dist;
+} 
+
+void calculateAllPathsDistances(Board* bd){
+    for(int i =0;i < bd->possiblePathsCount;i++){
+        calculatePathDistance(bd,bd->possiblePaths[i]);
     }
 }
 
-// void possibilites(City cities[], int nbr, Path path[], int pathIndex) {
-//     for(int i = 0; i<nbr; i++) {
-//         if(nbr==0) {
-//             return path;
-//         }
-//         if(nbr != 4) {
-//             path->totalDistance+=distanceCity(cities[i], path->pathCitiesOrder[4 - nbr - 1]);
-//         }
-//         path[pathIndex].pathCitiesOrder[4 - nbr] = cities[i];
-//         possibilites(removeElement(cities, i, nbr), nbr-1, path, pathIndex);
-//         pathIndex++;
-//     }
-// }
-
-
-// Path* calculatePossibilities(City cities[], int citiesCount, Path* pathList, int pathIndex) {
-//     if(citiesCount == 0 ) {
-//         return pathList;
-//     }
-//     for(int i = 1; i <= citiesCount; i++) {  
-//         //i -> current city index
-//         //Enleve la ville courrante des villes restantes
-//         City citiesLeft[citiesCount - 1];
-//         int offset = 0;
-//         for(int j = 0; j<citiesCount; j++) {
-//             if(j==i-1) offset++;
-//             citiesLeft[j] = cities[j + offset];
-//         }
-
-//         pathList[pathIndex].pathCitiesOrder[i-1] = cities[i-1];
-//         printCitiesMatrix(cities, citiesCount);
-//         return calculatePossibilities(citiesLeft, citiesCount-1, pathList, pathIndex + citiesCount * i);
-//     }
-// }
-
-// Path* calculatePossibilities(City* cities) {
-    
-// }
-
+Path* getOptimisedRoute(Board* bd){
+    Path* path = bd->possiblePaths[0];
+    for(int i =1;i < bd->possiblePathsCount;i++){
+        if (path->totalDistance > bd->possiblePaths[i]->totalDistance){
+            path = bd->possiblePaths[i];
+        }
+    }
+    return path;
+}
 
 int main() {
     // Production Board
-    // Board* bd = createBoard(50,20,8, (char*[]){"Lille", "Paris", "Montcuq", "Grenbole", "Amiens", "Saint-Dié", "Dijon", "Toulouse"});
+    // Board* bd = createBoard(50,20,8, (char*[]){"Lille", "Paris", "Montcuq", "Grenoble", "Amiens", "Saint-Dié", "Dijon", "Toulouse"});
 
-    Board* bd = createBoard(50,20,4, (char*[]){"Lille", "Paris", "Montcuq", "Grenbole"}); // Debug line
+    Board* bd = createBoard(50,20,8, (char*[]){"Lille", "Paris", "Montcuq", "Grenoble", "Amiens", "Saint-Dié", "Dijon", "Toulouse"}); // Debug line
 
     populateBoard(bd);
 
     displayBoard(bd);
 
     generateDistanceMatrix(bd);
-    // Printing all cities x and y coords DEBUG ONLY
-    for(int i = 0; i < bd->citiesCount; i++) {
-        printf("%s\n | x: %d\n | y: %d\n", bd->cities[i]->name, bd->cities[i]->position.x, bd->cities[i]->position.y);
-    }
+    // for(int i = 0; i < bd->citiesCount; i++) {
+    //     printf("%s\n | x: %d\n | y: %d\n", bd->cities[i]->name, bd->cities[i]->position.x, bd->cities[i]->position.y);
+    // }
+    generatePossiblePaths(bd);
 
+    calculateAllPathsDistances(bd);
+
+    Path* path = getOptimisedRoute(bd);
+    displayOptimisedRoute(bd,path);
     destroyBoard(bd);
     return 0;
 }

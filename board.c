@@ -18,14 +18,22 @@ Board* createBoard(int width, int height, int citiesCount, char** citiesNames) {
     bd->cities = malloc(sizeof(City) * citiesCount);
     if(bd->cities == NULL) exit(1);
 
-    bd->possiblePathsCount = factorial(citiesCount-1)/2;
+    bd->possiblePathsCount = factorial(citiesCount-1);
 
-    bd->possiblePaths = malloc(sizeof(Path) * bd->possiblePathsCount);
+    bd->possiblePaths = malloc(sizeof(Path*) * bd->possiblePathsCount);
     if(bd->possiblePaths == NULL) exit(1);
 
     for (int i = 0; i < bd->possiblePathsCount; i++) {
         bd->possiblePaths[i] = malloc(sizeof(Path));
         if(bd->possiblePaths[i] == NULL) exit(1);
+
+        bd->possiblePaths[i]->pathCitiesOrder = malloc(sizeof(City) * bd->citiesCount);
+        if(bd->possiblePaths[i] == NULL) exit(1);
+        
+        for (int j = 0; j < bd->citiesCount; j++) {
+            bd->possiblePaths[i]->pathCitiesOrder[j] = malloc(sizeof(City));    
+            if(bd->possiblePaths[i]->pathCitiesOrder[j] == NULL) exit(1);
+        }
     }
 
     bd->distanceMatrix = malloc(sizeof(int*) * citiesCount);
@@ -38,18 +46,43 @@ Board* createBoard(int width, int height, int citiesCount, char** citiesNames) {
         bd->cities[i] = malloc(sizeof(City));
         if(bd->cities[i] == NULL) exit(1);
 
-        bd->cities[i]->name = citiesNames[i];
+        bd->cities[i]->name = (char *)malloc(strlen(citiesNames[i]) + 1);
+
+        strcpy(bd->cities[i]->name, citiesNames[i]);
+
+
     }
+
     return bd;
+}
+
+int getCityIndex(Board* bd, City* city) {
+    for(int i = 0; i< bd->citiesCount; i++) {
+        if(strcmp(bd->cities[i]->name, city->name)==0) return i;
+    }
 }
 
 void destroyBoard(Board* bd) {
     //Libère les villes
-    for (int i=0; i<bd->citiesCount; i++) free(bd->cities[i]);
+    for (int i=0; i<bd->citiesCount; i++) {
+        free(bd->cities[i]->name);
+        free(bd->cities[i]);
+    }
     free(bd->cities);
 
+    //Libére les villes des chemins possibles
+    for (int i = 0; i < bd->possiblePathsCount; i++) {
+        for (int j = 0; j < bd->citiesCount; j++) {
+            if(bd->possiblePaths[i]->pathCitiesOrder[j]) {
+                free(bd->possiblePaths[i]->pathCitiesOrder[j]);  
+            }  
+        }
+        free(bd->possiblePaths[i]->pathCitiesOrder);
+
+        free(bd->possiblePaths[i]);
+    }
+
     //Libère les chemin possibles
-    for (int i=0; i<bd->possiblePathsCount; i++) free(bd->possiblePaths[i]);
     free(bd->possiblePaths);
 
     //Libère le tableau bidimensionel des distances
@@ -118,6 +151,34 @@ void displayBoard(Board* bd) {
     }
 }
 
+void displayOptimisedRoute(Board* bd,Path* path) {
+    int count = 0;
+    for(int y = 0; y <= bd->height + 1; y++) {
+        for(int x = 0; x <= bd->width + 1; x++) {
+            if(y==0 || y == bd->height+1) {
+                printf("-");
+            }
+            else if(x==0 || x==bd->width+1) printf("|"); 
+            else{
+                if(count < bd->citiesCount && bd->cities[count]->position.x+1 == x && bd->cities[count]->position.y+1 == y){
+                    int index =0;
+                    for(int i=0;i<bd->citiesCount;i++){
+                        if(strcmp(path->pathCitiesOrder[i]->name,bd->cities[count]->name)==0){
+                            index = i;
+                        }
+                    }
+                    printf("%d", index);
+                    count++;
+                }
+                else {
+                    printf(" ");
+                }
+            }
+        }
+        printf("\n");
+    }
+}
+
 void generateDistanceMatrix(Board* bd){
     Coords origin = {0,0}; 
     for(int i=0;i<bd->citiesCount;i++){
@@ -133,8 +194,7 @@ void generateDistanceMatrix(Board* bd){
 }
 
 City* getCity(Board* bd, char* name) {
-    int size = sizeof(bd->cities) / sizeof(bd->cities[0]);
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < bd->citiesCount; i++)
     {
         if(strcmp(bd->cities[i]->name,name) == 0) return bd->cities[i];
     }

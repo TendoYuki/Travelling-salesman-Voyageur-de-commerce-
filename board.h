@@ -32,7 +32,7 @@ void displayBoard(Board*);
 void populateBoard(Board*);
 
 /**
- * Retourne un pointeru vers une ville en fonction d'un plateau donné et du nom recherché.
+ * Retourne un pointer vers une ville en fonction d'un plateau donné et du nom recherché.
 */
 City* getCity(Board*, char*);
 
@@ -45,5 +45,14 @@ void generateDistanceMatrix(Board*);
  * Désalloue un plateau et tout ses composants
 */
 void destroyBoard(Board*);
+
+/**
+ * 
+*/
+int getCityIndex(Board*, City*);
+/**
+ * 
+*/
+void displayOptimisedRoute(Board*,Path*);
 
 #endif

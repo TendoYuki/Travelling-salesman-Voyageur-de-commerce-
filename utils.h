@@ -1,3 +1,8 @@
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #ifndef UTILS_H
 #define UTILS_H
 
@@ -22,8 +27,44 @@ typedef struct City{
 */
 typedef struct Path{
     float totalDistance;
-    City* pathCitiesOrder;
+    City** pathCitiesOrder;
 } Path;
+
+/**
+ * Retourne une nouvelle liste en fonction d'un pointeurs vers une liste de ville passé en paramétre.
+ * La nouvelle liste ne contiendra pas la ville d'index passé en paramètre, et devra être libérée avec free() 
+*/
+City** removeCity(City**,int, int);
+
+/**
+ * 
+*/
+City** copyCityList(City**, int);
+
+/**
+ * Copie le contenu de la ville city dans la ville copy
+ * Alloue de la mémoire pour le nom avec malloc(), elle devra être liberée avec free
+*/
+void copyCity(City*, City*);
+
+City* cloneCity(City*) ;
+
+void freeCityList(City**, int);
+
+/**
+ * Libére le chemin mais ne libère pas les villes qu'il contient
+*/
+void freePath(Path*, int);
+
+/**
+ * Crée et alloue avec malloc() un Path et retourne son addresse
+*/
+Path* createPath(int);
+
+/**
+ * Copie un path dans un nouveau et retourne l'adresse de la copie, allouée avec malloc()
+*/
+Path* clonePath(Path*, int);
 
 /**
  * Retourne la distance entre deux coordonées.
