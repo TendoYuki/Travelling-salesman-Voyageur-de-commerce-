@@ -13,11 +13,14 @@ Path* clonePath(Path* path, int citiesCount) {
 
 Path* createPath(int citiesCount) {
     Path* path = malloc(sizeof(Path*));
+    if(path == NULL) exit(1);
     path->pathCitiesOrder = malloc(sizeof(City*) * citiesCount);
+    if(path->pathCitiesOrder == NULL) exit(1);
     path->totalDistance = 0;
     //Copie les villes contenues dans le path
     for(int i=0; i < citiesCount; i++) {
         path->pathCitiesOrder[i] = malloc(sizeof(City*));
+        if(path->pathCitiesOrder[i] == NULL) exit(1);
         path->pathCitiesOrder[i]->name = NULL;
     }
     return path;

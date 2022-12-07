@@ -15,7 +15,7 @@ Board* createBoard(int width, int height, int citiesCount, char** citiesNames) {
     bd->height = height;
     bd->citiesCount = citiesCount;
 
-    bd->cities = malloc(sizeof(City) * citiesCount);
+    bd->cities = malloc(sizeof(City*) * citiesCount);
     if(bd->cities == NULL) exit(1);
 
     bd->possiblePathsCount = factorial(citiesCount-1);
@@ -24,16 +24,7 @@ Board* createBoard(int width, int height, int citiesCount, char** citiesNames) {
     if(bd->possiblePaths == NULL) exit(1);
 
     for (int i = 0; i < bd->possiblePathsCount; i++) {
-        bd->possiblePaths[i] = malloc(sizeof(Path));
-        if(bd->possiblePaths[i] == NULL) exit(1);
-
-        bd->possiblePaths[i]->pathCitiesOrder = malloc(sizeof(City) * bd->citiesCount);
-        if(bd->possiblePaths[i] == NULL) exit(1);
-        
-        for (int j = 0; j < bd->citiesCount; j++) {
-            bd->possiblePaths[i]->pathCitiesOrder[j] = malloc(sizeof(City));    
-            if(bd->possiblePaths[i]->pathCitiesOrder[j] == NULL) exit(1);
-        }
+        bd->possiblePaths[i] = createPath(bd->citiesCount);
     }
 
     bd->distanceMatrix = malloc(sizeof(int*) * citiesCount);
@@ -43,14 +34,12 @@ Board* createBoard(int width, int height, int citiesCount, char** citiesNames) {
         bd->distanceMatrix[i] = malloc(sizeof(int) * citiesCount);
         if(bd->distanceMatrix[i] == NULL) exit(1);
 
-        bd->cities[i] = malloc(sizeof(City));
+        bd->cities[i] = malloc(sizeof(City*));
         if(bd->cities[i] == NULL) exit(1);
 
         bd->cities[i]->name = (char *)malloc(strlen(citiesNames[i]) + 1);
 
         strcpy(bd->cities[i]->name, citiesNames[i]);
-
-
     }
 
     return bd;

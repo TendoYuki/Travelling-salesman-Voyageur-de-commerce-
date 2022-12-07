@@ -7,14 +7,14 @@
 #include "city.h"
 
 /**
- * Calcule la factorelle d'un nombre
+ * Calcule la factorelle d'un nombre n
 */
-int factorial(int);
+int factorial(int n);
 
 /**
  * Calcule le nombre de possibilitées de chemin en fonction du nombre de villes
 */
-int calculatePossibilitiesCount(int);
+int calculatePossibilitiesCount(int citiesCount);
 
 /**
  * Affiche une matrice tab de taille horizontale sizeX et de taille verticale sizeY

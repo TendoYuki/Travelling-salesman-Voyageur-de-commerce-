@@ -51,6 +51,6 @@ void freeCityList(City** cities, int citiesCount) {
     free(cities);
 }
 
-float distanceCity(City* a, City* b) {
-    return sqrt(pow((float)(a->position.x-b->position.x),2)+pow((float)(a->position.y-b->position.y),2));
+float distanceCity(City* ct1, City* ct2) {
+    return sqrt(pow((float)(ct1->position.x-ct2->position.x),2)+pow((float)(ct1->position.y-ct2->position.y),2));
 }

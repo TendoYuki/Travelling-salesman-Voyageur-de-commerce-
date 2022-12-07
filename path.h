@@ -15,16 +15,16 @@ typedef struct Path{
 /**
  * Libére le chemin mais ne libère pas les villes qu'il contient
 */
-void freePath(Path*);
+void freePath(Path* path);
 
 /**
  * Crée et alloue avec malloc() un Path et retourne son addresse
 */
-Path* createPath(int);
+Path* createPath(int citiesCount);
 
 /**
  * Copie un path dans un nouveau et retourne l'adresse de la copie, allouée avec malloc()
 */
-Path* clonePath(Path*, int);
+Path* clonePath(Path* path, int citiesCount);
 
 #endif

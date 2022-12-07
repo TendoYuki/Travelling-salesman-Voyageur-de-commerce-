@@ -11,8 +11,8 @@ typedef struct Coords{
 } Coords;
 
 /**
- * Retourne la distance entre deux coordonées.
+ * Retourne la distance entre les coordonées a et b.
 */
-float distanceCoord(Coords*, Coords*);
+float distanceCoord(Coords* a, Coords* b);
 
 #endif
