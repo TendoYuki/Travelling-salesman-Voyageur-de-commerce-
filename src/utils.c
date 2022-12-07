@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "../include/utils.h"
 
 int factorial(int n) {
     if (n == 0)

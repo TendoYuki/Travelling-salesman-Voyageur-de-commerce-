@@ -1,5 +1,5 @@
-#include "board.h"
-#include "utils.h"
+#include "../include/board.h"
+#include "../include/utils.h"
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>

@@ -1,4 +1,4 @@
-#include "city.h"
+#include "../include/city.h"
 
 void copyCity(City* city, City* copy) {
     copy->name = strdup(city->name);
