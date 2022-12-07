@@ -19,7 +19,7 @@ int calculatePossibilitiesCount(int citiesCount);
 /**
  * Affiche une matrice tab de taille horizontale sizeX et de taille verticale sizeY
 */
-void printMatrix(float** tab, int sizeX, int sizeY);
+void printFloatMatrix(float** tab, int sizeX, int sizeY);
 
 /**
  * Crée et alloue avec malloc() une matrice de nombre à virgule de taille veritcale sizeY et de taille horizontale sizeX

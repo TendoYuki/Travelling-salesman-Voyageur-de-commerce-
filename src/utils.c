@@ -10,7 +10,7 @@ int calculatePossibilitiesCount(int citiesCount) {
     return factorial(citiesCount - 1);
 }
 
-void printMatrix(float** tab, int sizeX, int sizeY) {
+void printFloatMatrix(float** tab, int sizeX, int sizeY) {
     for(int i = 0; i < sizeY; i++) {
         printf("\n[ ");
         for(int j = 0; j < sizeX; j++) {

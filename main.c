@@ -12,7 +12,7 @@ int main() {
 
     generateDistanceMatrix(bd);
 
-    // printMatrix(bd->distanceMatrix, bd->citiesCount, bd->citiesCount);
+    // printFloatMatrix(bd->distanceMatrix, bd->citiesCount, bd->citiesCount);
 
     generatePossiblePaths(bd);
 
