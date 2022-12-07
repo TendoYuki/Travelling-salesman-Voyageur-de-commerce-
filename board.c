@@ -64,25 +64,14 @@ int getCityIndex(Board* bd, City* city) {
 
 void destroyBoard(Board* bd) {
     //Libère les villes
-    for (int i=0; i<bd->citiesCount; i++) {
-        free(bd->cities[i]->name);
-        free(bd->cities[i]);
-    }
-    free(bd->cities);
+    freeCityList(bd->cities, bd->citiesCount);
 
-    //Libére les villes des chemins possibles
+    //Libére les chemins possibles
     for (int i = 0; i < bd->possiblePathsCount; i++) {
-        for (int j = 0; j < bd->citiesCount; j++) {
-            if(bd->possiblePaths[i]->pathCitiesOrder[j]) {
-                free(bd->possiblePaths[i]->pathCitiesOrder[j]);  
-            }  
-        }
-        free(bd->possiblePaths[i]->pathCitiesOrder);
-
-        free(bd->possiblePaths[i]);
+        freePath(bd->possiblePaths[i]);
     }
 
-    //Libère les chemin possibles
+    //Libère la liste des chemin possibles
     free(bd->possiblePaths);
 
     //Libère le tableau bidimensionel des distances
@@ -151,7 +140,7 @@ void displayBoard(Board* bd) {
     }
 }
 
-void displayOptimisedRoute(Board* bd,Path* path) {
+void displayPath(Board* bd,Path* path) {
     int count = 0;
     for(int y = 0; y <= bd->height + 1; y++) {
         for(int x = 0; x <= bd->width + 1; x++) {
@@ -201,3 +190,57 @@ City* getCity(Board* bd, char* name) {
     return NULL;
 } 
 
+void generatePossiblePaths(Board* bd) {
+    Path* path = createPath(bd->citiesCount);
+    City** newCitiesLeft = cloneCityList(bd->cities, bd->citiesCount);
+    generatePath(bd, bd->cities[0], path, removeCity(newCitiesLeft, 0, bd->citiesCount), bd->citiesCount-1, 0, bd->citiesCount, 1);
+    free(newCitiesLeft);
+}
+
+void generatePath(Board* bd, City* currentCity, Path* previousPath, City** citiesLeft, int citiesLeftCount, int previousDivergence, int maxDepth, int depth) {
+    previousPath->pathCitiesOrder[depth-1] = currentCity;
+    if(citiesLeftCount == 0) {
+        bd->possiblePaths[previousDivergence] = clonePath(previousPath, bd->citiesCount);
+        free(citiesLeft);
+        freePath(previousPath);
+        return;
+    }
+
+    for (int i = 0; i < citiesLeftCount; i++) {
+        int divergence = factorial(maxDepth - (depth + 1)) * i + previousDivergence;
+        City** newCitiesLeft = cloneCityList(citiesLeft, citiesLeftCount);
+        generatePath(bd, getCity(bd, citiesLeft[i]->name), clonePath(previousPath, bd->citiesCount), removeCity(newCitiesLeft, i, citiesLeftCount), citiesLeftCount-1, divergence ,maxDepth , depth+1);
+        free(newCitiesLeft);
+    }
+    free(citiesLeft);
+    freePath(previousPath);
+}
+
+Path* getOptimisedRoute(Board* bd){
+    Path* path = bd->possiblePaths[0];
+    for(int i =1;i < bd->possiblePathsCount;i++){
+        if (path->totalDistance > bd->possiblePaths[i]->totalDistance){
+            path = bd->possiblePaths[i];
+        }
+    }
+    return path;
+}
+
+void calculatePathDistance(Board* bd, Path* path) {
+    float dist = 0;
+    for(int i=0; i<bd->citiesCount; i++) {
+        if (i == bd->citiesCount-1) {
+            dist += bd->distanceMatrix[getCityIndex(bd, path->pathCitiesOrder[i])][getCityIndex(bd, path->pathCitiesOrder[0])];
+        } 
+        else {
+            dist += bd->distanceMatrix[getCityIndex(bd, path->pathCitiesOrder[i])][getCityIndex(bd, path->pathCitiesOrder[i+1])];
+        }
+    }
+    path->totalDistance = dist;
+} 
+
+void calculateAllPathsDistances(Board* bd){
+    for(int i =0;i < bd->possiblePathsCount;i++){
+        calculatePathDistance(bd,bd->possiblePaths[i]);
+    }
+}
