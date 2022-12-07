@@ -20,3 +20,19 @@ void printMatrix(float** tab, int sizeX, int sizeY) {
         printf(" ]\n");
     }
 }
+
+float** createFloatMatrix(int sizeY, int sizeX) {
+    float** matrix = malloc(sizeof(float*) * sizeY);
+    if(matrix== NULL) exit(1);
+
+    for (int i = 0; i < sizeY; i++) {
+        matrix[i] = malloc(sizeof(float) * sizeX);
+        if(matrix[i] == NULL) exit(1);
+    }
+    return matrix;
+}
+
+void freeFloatMatrix(float** matrix, int sizeY) {
+    for (int i=0; i < sizeY; i++) free(matrix[i]);
+    free(matrix);
+}

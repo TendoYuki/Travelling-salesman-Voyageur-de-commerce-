@@ -54,3 +54,27 @@ void freeCityList(City** cities, int citiesCount) {
 float distanceCity(City* ct1, City* ct2) {
     return sqrt(pow((float)(ct1->position.x-ct2->position.x),2)+pow((float)(ct1->position.y-ct2->position.y),2));
 }
+
+City* createCity(char* name) {
+    //Alloue la ville
+    City* ct = malloc(sizeof(City*));
+    if(ct == NULL) exit(1);
+
+    //Alloue le nom de la ville
+    ct->name = (char*)malloc(strlen(name) + 1);
+    if(ct->name == NULL) exit(1);
+
+    //Copie name dans le nom de la ville
+    strcpy(ct->name, name);
+    
+    return ct;
+}
+
+
+City** createCitesList(int citiesCount, char** citiesNames) {
+    City** cities = malloc(sizeof(City*) * citiesCount);
+    for (int i = 0; i < citiesCount; i++) {
+        cities[i] = createCity(citiesNames[i]);
+    }
+    return cities;
+}

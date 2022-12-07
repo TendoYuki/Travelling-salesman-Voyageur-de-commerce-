@@ -14,33 +14,13 @@ Board* createBoard(int width, int height, int citiesCount, char** citiesNames) {
     bd->width = width;
     bd->height = height;
     bd->citiesCount = citiesCount;
-
-    bd->cities = malloc(sizeof(City*) * citiesCount);
-    if(bd->cities == NULL) exit(1);
-
     bd->possiblePathsCount = factorial(citiesCount-1);
 
-    bd->possiblePaths = malloc(sizeof(Path*) * bd->possiblePathsCount);
-    if(bd->possiblePaths == NULL) exit(1);
+    bd->cities = createCitesList(bd->citiesCount, citiesNames);
 
-    for (int i = 0; i < bd->possiblePathsCount; i++) {
-        bd->possiblePaths[i] = createPath(bd->citiesCount);
-    }
+    bd->possiblePaths = createPathList(bd->possiblePathsCount, bd->citiesCount);
 
-    bd->distanceMatrix = malloc(sizeof(int*) * citiesCount);
-    if(bd->distanceMatrix == NULL) exit(1);
-
-    for (int i = 0; i < citiesCount; i++) {
-        bd->distanceMatrix[i] = malloc(sizeof(int) * citiesCount);
-        if(bd->distanceMatrix[i] == NULL) exit(1);
-
-        bd->cities[i] = malloc(sizeof(City*));
-        if(bd->cities[i] == NULL) exit(1);
-
-        bd->cities[i]->name = (char *)malloc(strlen(citiesNames[i]) + 1);
-
-        strcpy(bd->cities[i]->name, citiesNames[i]);
-    }
+    bd->distanceMatrix = createFloatMatrix(bd->citiesCount, bd->citiesCount);
 
     return bd;
 }
@@ -52,20 +32,14 @@ int getCityIndex(Board* bd, City* city) {
 }
 
 void destroyBoard(Board* bd) {
+    //Libére les chemins possibles
+    freePathList(bd->possiblePaths, bd->possiblePathsCount);
+
     //Libère les villes
     freeCityList(bd->cities, bd->citiesCount);
 
-    //Libére les chemins possibles
-    for (int i = 0; i < bd->possiblePathsCount; i++) {
-        freePath(bd->possiblePaths[i]);
-    }
-
-    //Libère la liste des chemin possibles
-    free(bd->possiblePaths);
-
     //Libère le tableau bidimensionel des distances
-    for (int i=0; i<bd->citiesCount; i++) free(bd->distanceMatrix[i]);
-    free(bd->distanceMatrix);
+    freeFloatMatrix(bd->distanceMatrix, bd->citiesCount);
 
     //Libére l'objet Board
     free(bd);

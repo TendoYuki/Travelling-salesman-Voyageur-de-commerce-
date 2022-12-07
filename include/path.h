@@ -27,4 +27,15 @@ Path* createPath(int citiesCount);
 */
 Path* clonePath(Path* path, int citiesCount);
 
+/**
+ * Crée et alloue avec malloc() une liste de Path et retourne l'adresse du premier élément de la liste
+*/
+Path** createPathList(int pathListSize,int citiesCount);
+
+/**
+ * Désalloue une liste de chemin pathList en fonction du nombre de chemin pathCount 
+ * NB: les villes contenues dans chaque chemin ne seront pas désallouées
+*/
+void freePathList(Path** pathList, int pathCount);
+
 #endif

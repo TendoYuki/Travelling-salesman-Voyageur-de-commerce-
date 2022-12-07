@@ -21,4 +21,14 @@ int calculatePossibilitiesCount(int citiesCount);
 */
 void printMatrix(float** tab, int sizeX, int sizeY);
 
+/**
+ * Crée et alloue avec malloc() une matrice de nombre à virgule de taille veritcale sizeY et de taille horizontale sizeX
+*/
+float** createFloatMatrix(int sizeY, int sizeX);
+
+/**
+ * Désalloue une matrice matrix de nombre à virgule de taille veritcale sizeY
+*/
+void freeFloatMatrix(float** matrix, int sizeY);
+
 #endif

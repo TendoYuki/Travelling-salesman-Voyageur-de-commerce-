@@ -45,4 +45,15 @@ void freeCityList(City** cities, int citiesCount);
 */
 City** cloneCityList(City** cities, int citiesCount);
 
+/**
+ * Crée et alloue une ville et son nom avec malloc(), la ville crée sera alors retournée
+*/
+City* createCity(char* name);
+
+/**
+ * Crée et alloue une liste de ville avec malloc() en fonction du nombre de ville et du nom de chacunes de villes
+*/
+City** createCitesList(int citiesCount, char** citiesNames);
+
+
 #endif
