@@ -136,7 +136,7 @@ void generateDistanceMatrix(Board* bd){
     for(int i=0;i<bd->citiesCount;i++){
         for(int j=i;j<bd->citiesCount;j++){
             if(i==j){
-                bd->distanceMatrix[i][j] = distanceCoord(&bd->cities[i]->position, &origin);
+                bd->distanceMatrix[i][j] = 0;
                 continue;
             }
             bd->distanceMatrix[i][j] = distanceCity(bd->cities[i], bd->cities[j]);
@@ -206,4 +206,71 @@ void calculateAllPathsDistances(Board* bd){
     for(int i =0;i < bd->possiblePathsCount;i++){
         calculatePathDistance(bd,bd->possiblePaths[i]);
     }
+}
+
+City* getCityByIndex(Board* bd, int index) {
+    return bd->cities[index];
+}
+
+City* getClosestCity(Board* bd, City* ct, City** excluded, int excludedCount) {
+    int ctIndex = getCityIndex(bd, ct);
+    float min = -1;
+    City* minCity = malloc(sizeof(City));
+
+    //Initialisation de min à la première valeur valide de cities
+    for (int k = 0; min < 0 && k < bd->citiesCount; k++) {
+        bool isValid = true;
+        City* current = getCityByIndex(bd, k);
+        for (int j = 0; j < excludedCount; j++) { 
+            if(current == excluded[j]) {
+                isValid = false;
+                break;
+            }
+        }
+        if (current == ct) isValid = false;
+        if(isValid) {
+            minCity = getCityByIndex(bd, k);
+            min = bd->distanceMatrix[k][ctIndex];
+            break;
+        }
+    }
+
+    //Sort de la fonction si toutes les villes sont exclues
+    if (min < 0) return NULL;
+
+    for (int i = 0; i < bd->citiesCount; i++) {
+        bool isValid = true;
+        City* current = getCityByIndex(bd, i);
+        for (int j = 0; j < excludedCount; j++) { 
+            if(current == excluded[j]) {
+                isValid = false;
+                break;
+            }
+        }
+        if (current == ct) isValid = false;
+        float val = bd->distanceMatrix[i][ctIndex];
+        if(val < min && isValid) {
+            min = val;
+            minCity = getCityByIndex(bd, i);
+        }
+    }
+    return minCity;
+}
+
+Path* recursiveRoute(Board* bd, City** cityExcluded, int excludedCount,Path* path){
+    cityExcluded[excludedCount-1] = path->pathCitiesOrder[excludedCount-1];
+    if (excludedCount==bd->citiesCount) return path;
+    path->pathCitiesOrder[excludedCount] = getClosestCity(bd,path->pathCitiesOrder[excludedCount-1],cityExcluded,excludedCount);
+    path->totalDistance += bd->distanceMatrix[getCityIndex(bd,path->pathCitiesOrder[excludedCount])][getCityIndex(bd,path->pathCitiesOrder[excludedCount-1])];
+    recursiveRoute(bd,cityExcluded,excludedCount+1,path);
+}
+
+Path* getOptimisedRouteByDistance(Board* bd){
+    City** cityExcluded = malloc(sizeof(City*) *bd->citiesCount);
+    Path* path = createPath(bd->citiesCount);
+    path->pathCitiesOrder[0] = bd->cities[0];
+    path = recursiveRoute(bd, cityExcluded, 1,path);
+    path->totalDistance += bd->distanceMatrix[getCityIndex(bd,path->pathCitiesOrder[bd->citiesCount-1])][0];
+    free(cityExcluded);
+    return path;
 }

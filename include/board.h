@@ -48,7 +48,7 @@ void generateDistanceMatrix(Board* bd);
 void destroyBoard(Board* bd);
 
 /**
- * Retourne l'index d'affichage d'une ville city en fonction d'un board bd
+ * Retourne l'index d'affichage d'une ville city en fonction d'un plateau bd
 */
 int getCityIndex(Board* bd, City* city);
 
@@ -74,15 +74,35 @@ void generatePath(Board* bd, City* currentCity, Path* previousPath, City** citie
 Path* getOptimisedRoute(Board* bd);
 
 /**
- * Calcule la distance totale d'un path passé en paramètre sur un board bd
+ * Calcule la distance totale d'un path passé en paramètre sur un plateau bd
  * Fonction uniquement appellée par la fonction calculateAllPathsDistances
 */
 void calculatePathDistance(Board* bd, Path* path);
 
 /**
- *  Calcule la distance de toute les path d'un board bd
+ *  Calcule la distance de toute les path d'un plateau bd
 */
 void calculateAllPathsDistances(Board* bd);
 
+/**
+ * Retourne un pointeur vers une ville en fonction de son index sur un plateau bd
+*/
+City* getCityByIndex(Board* bd, int index);
+
+/**
+ * Retourne la ville la plus proche de la ville ct sur un plateau bd en prenant en compte la liste excluded representant les villes inaccessibles
+*/
+City* getClosestCity(Board* bd, City* ct, City** excluded, int excludedCount);
+
+/**
+ * Fonction recursive prenant en paramètre un plateau bd, une liste de ville inaccessible de taille excludedCount 
+ * Retourne le path passé en paramètre auquel sera ajouté recursivement la ville la plus proche
+*/
+Path* recursiveRoute(Board* bd, City** cityExcluded, int excludedCount,Path* path);
+
+/**
+ * Retourne un path généré par voyage récursive à la ville la plus proche jusqu'a ce qu'il n'y ai plus de villes à parcourir
+*/
+Path* getOptimisedRouteByDistance(Board* bd);
 
 #endif

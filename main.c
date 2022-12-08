@@ -12,14 +12,25 @@ int main() {
 
     generateDistanceMatrix(bd);
 
-    // printFloatMatrix(bd->distanceMatrix, bd->citiesCount, bd->citiesCount);
+    printFloatMatrix(bd->distanceMatrix, bd->citiesCount, bd->citiesCount);
 
     generatePossiblePaths(bd);
 
     calculateAllPathsDistances(bd);
 
-    displayPath(bd,getOptimisedRoute(bd));
+    // displayPath(bd,getOptimisedRoute(bd));
 
+    // printf("%p\n",  );
+
+    for(int i = 0; i < bd->citiesCount; i++) {
+        printf("%s\n | x: %d\n | y: %d\n", bd->cities[i]->name, bd->cities[i]->position.x, bd->cities[i]->position.y);
+    }
+
+
+    Path* path = getOptimisedRouteByDistance(bd);
+    displayPath(bd,path);
+    displayPath(bd,getOptimisedRoute(bd));
+    free(path);
     destroyBoard(bd);
     return 0;
 }
