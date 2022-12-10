@@ -1,8 +1,5 @@
 #ifndef CITY_H
 #define CITY_H
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
 #include "coords.h"
 
 /**

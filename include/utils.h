@@ -1,10 +1,5 @@
-
 #ifndef UTILS_H
 #define UTILS_H
-
-#include <math.h>
-#include <stdio.h>
-#include "city.h"
 
 /**
  * Calcule la factorelle d'un nombre n

@@ -1,4 +1,5 @@
 #include "../include/path.h"
+#include <stdlib.h>
 
 Path* clonePath(Path* path, int citiesCount) {
     Path* copy = createPath(citiesCount);

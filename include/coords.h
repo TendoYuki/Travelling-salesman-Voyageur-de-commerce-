@@ -1,6 +1,5 @@
 #ifndef COORDS_H
 #define COORDS_H
-#include <math.h>
 
 /**
  * Type Coords contenant l'abscisse(x) et l'ordonée(y) d'un point.

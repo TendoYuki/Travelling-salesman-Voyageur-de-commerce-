@@ -1,4 +1,7 @@
 #include "../include/city.h"
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
 
 void copyCity(City* city, City* copy) {
     copy->name = strdup(city->name);
