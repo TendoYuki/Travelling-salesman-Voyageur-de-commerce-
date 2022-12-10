@@ -1,7 +1,7 @@
 #include "../include/utils.h"
 #include <math.h>
 #include <stdio.h>
-#include "../include/city.h"
+#include <stdlib.h>
 
 int factorial(int n) {
     if (n == 0)
