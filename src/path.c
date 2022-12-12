@@ -1,5 +1,8 @@
 #include "../include/path.h"
+#include "../include/board.h"
+#include "../include/car.h"
 #include <stdlib.h>
+#include <math.h>
 
 Path* clonePath(Path* path, int citiesCount) {
     Path* copy = createPath(citiesCount);
@@ -57,4 +60,30 @@ void freePath(Path* path) {
 void freePathList(Path** pathList, int pathCount) {
     for(int i = 0; i < pathCount; i++) freePath(pathList[i]);
     free(pathList);
+}
+
+int *optimizePathForVehicle(Car *car, int maxRechageTimePerCity, Path *pathToOptimize, Board *bd) {
+    // Recharge time for each city, tab is ordered as in the path.
+    int *rechargeTimePerCityOrdered = malloc(sizeof(int)*bd->citiesCount); 
+    for(int i =0; i < bd->citiesCount; i++) rechargeTimePerCityOrdered[i] = 0; //initialise toute les valeurs à zero
+    if(!rechargeTimePerCityOrdered) return NULL;
+
+    int autonomyLeft = car->autonomy;
+    int totalDistanceReachable = car->autonomy;
+
+    for(int i = 0; i < bd->citiesCount; i++) {
+        
+        if(i==bd->citiesCount-1) autonomyLeft -= ceil(bd->distanceMatrix[getCityIndex(bd, pathToOptimize->pathCitiesOrder[i])][getCityIndex(bd, pathToOptimize->pathCitiesOrder[0])]); //Cas ou on traite la dernière vile
+        else autonomyLeft -= ceil(bd->distanceMatrix[getCityIndex(bd, pathToOptimize->pathCitiesOrder[i])][getCityIndex(bd, pathToOptimize->pathCitiesOrder[i+1])]);
+        
+        //recharge logic
+        int currentRechargeTime = 0;
+        while(totalDistanceReachable < pathToOptimize->totalDistance && autonomyLeft < car->autonomy - car->rechargeRate && currentRechargeTime < maxRechageTimePerCity) {
+            totalDistanceReachable+=car->rechargeRate;
+            autonomyLeft+=car->rechargeRate;
+            currentRechargeTime++;
+        }
+        rechargeTimePerCityOrdered[i] = currentRechargeTime;
+    }
+    return rechargeTimePerCityOrdered;
 }

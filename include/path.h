@@ -3,6 +3,9 @@
 
 #include "city.h"
 
+struct Board;
+struct Car;
+
 /**
  * Type Chemin, avec l'ordre de passage et la distance totale du parcours
 */
@@ -36,5 +39,13 @@ Path** createPathList(int pathListSize,int citiesCount);
  * NB: les villes contenues dans chaque chemin ne seront pas désallouées
 */
 void freePathList(Path** pathList, int pathCount);
+
+/**
+ *  Optimise un chemin en fonction de l'autonomie d'un véhicule et de son taux de rechage en km/minutes
+ *  Cette fonction retourne un tableau d'integer représentant le temps de rechage par ville.
+ *  Les indexes correspondent à ceux du path 
+ *  ex: ville dans le path à l'index 2 -> temps de recharge à l'index 2
+*/
+int *optimizePathForVehicle(struct Car *car, int maxRechageTimePerCity, Path *pathToOptimize, struct Board *bd);
 
 #endif

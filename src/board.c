@@ -1,5 +1,8 @@
 #include "../include/board.h"
 #include "../include/utils.h"
+#include "../include/path.h"
+#include "../include/city.h"
+
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
